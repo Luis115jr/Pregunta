@@ -12,12 +12,14 @@
             align-items: center;
             height: 100vh;
             background-color: #afa7c7;
-            overflow: hidden; /* Evita que se desborde el contenido */
-            margin: 0; /* Elimina el margen del body */
+            overflow: hidden;
+            margin: 0;
         }
         .container {
             text-align: center;
             position: relative;
+            width: 100vw;
+            height: 100vh;
         }
         h1 {
             color: #333;
@@ -31,14 +33,14 @@
             color: white;
             border: none;
             cursor: pointer;
-            position: absolute; /* Para poder mover el botón libremente */
-            transition: transform 0.1s ease, background-color 0.3s; /* Transición suave */
-            border-radius: 5px; /* Bordes redondeados */
-            font-size: 18px; /* Tamaño de fuente */
+            position: absolute;
+            transition: transform 0.1s ease, background-color 0.3s;
+            border-radius: 5px;
+            font-size: 18px;
         }
         .option:hover {
             transform: scale(1.1);
-            background-color: #0056b3; /* Cambio de color al pasar el mouse */
+            background-color: #0056b3;
         }
         .message {
             display: none;
@@ -52,54 +54,103 @@
             left: 50%;
             transform: translateX(-50%);
         }
+        /* Estilos para los corazones animados */
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: #FF69B4;
+            opacity: 0;
+            animation: pulse 1s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 0; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>¿Te gustan las mujeres?</h1>
-    <button class="option" id="option1" style="top: 50%; left: 50%;">NO</button>
+    <h1>Tere, tu me gustas mucho y es algo que vos sabes;</h1>
+    <h1>¿Me darias una oportunidad, para hacerte sentir verdaderamente como mi REINA?</h1>
+    <button class="option" id="option1" style="top: 50%; left: 10%;">NO</button>
     <button class="option" id="option2" style="top: 50%; left: 60%;">SI</button>
     <div class="message" id="message"></div>
 </div>
 
 <script>
-    const option1 = document.getElementById('option1'); // Opción que se moverá
-    const option2 = document.getElementById('option2'); // Opción fija
+    const option1 = document.getElementById('option1');
+    const option2 = document.getElementById('option2');
     const message = document.getElementById('message');
 
-    // Función para mover la opción "NO" al hacer clic
+    // Función para mover la opción "NO" aleatoriamente
     function moveOption() {
-        // Obtener posiciones actuales
-        const rect1 = option1.getBoundingClientRect();
-        const rect2 = option2.getBoundingClientRect();
+        const buttonRect = option1.getBoundingClientRect();
+        const containerRect = document.body.getBoundingClientRect();
+        
+        const maxX = containerRect.width - buttonRect.width - 20;
+        const maxY = containerRect.height - buttonRect.height - 20;
 
-        // Intercambiar las posiciones
-        option1.style.left = `${rect2.left}px`;
-        option1.style.top = `${rect2.top}px`;
+        let randomX = Math.random() * maxX;
+        let randomY = Math.random() * maxY;
 
-        option2.style.left = `${rect1.left}px`;
-        option2.style.top = `${rect1.top}px`;
+        option1.style.left = `${randomX}px`;
+        option1.style.top = `${randomY}px`;
     }
 
-    // El usuario puede hacer clic en la opción "SI"
-    option2.addEventListener('click', () => {
-        message.innerText = '¡Genial! Me alegra que pienses así.';
-        message.style.display = 'block';
-        message.style.opacity = 1; // Hacer el mensaje visible
-        option1.style.display = 'none'; // Esconder la opción "NO"
-        option2.style.backgroundColor = '#28a745'; // Cambiar color al hacer clic
+    document.addEventListener('mousemove', (e) => {
+        const buttonRect = option1.getBoundingClientRect();
+        const distance = Math.hypot(e.clientX - (buttonRect.left + buttonRect.width / 2), e.clientY - (buttonRect.top + buttonRect.height / 2));
+
+        if (distance < 50) {
+            moveOption();
+        }
     });
 
-    // Bloquear clics en la opción "NO"
+    option2.addEventListener('click', () => {
+        message.innerText = 'Yo sabia que dirias que si ¡¡TE QUELO COCHITA!!.';
+        message.style.display = 'block';
+        message.style.opacity = 1;
+        option1.style.display = 'none';
+        option2.style.backgroundColor = '#28a745';
+        
+        createHearts(); // Llamada a la función para crear corazones
+    });
+
     option1.addEventListener('click', (e) => {
         e.preventDefault();
-        moveOption(); // Cambia de lugar la opción "NO"
+        moveOption();
         message.innerText = 'No puedes elegir NO, intenta con SI.';
         message.style.display = 'block';
-        message.style.opacity = 1; // Hacer el mensaje visible
+        message.style.opacity = 1;
     });
+
+    // Función para crear corazones animados
+    function createHearts() {
+        for (let i = 0; i < 15; i++) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerText = '❤️';
+            document.body.appendChild(heart);
+
+            // Posición y tamaño aleatoria
+            heart.style.left = `${Math.random() * 100}vw`;
+            heart.style.top = `${Math.random() * 100}vh`;
+            heart.style.fontSize = `${Math.random() * 80 + 80}px`;
+
+            // Animación de aparición y subida
+            heart.style.opacity = 2;
+            heart.style.animation = `pulse 1.5s ease-in-out infinite, moveUp 3s ease ${Math.random() * 2}s`;
+
+            // Quitar el corazón después de unos segundos
+            setTimeout(() => {
+                heart.remove();
+            }, 10000);
+        }
+    }
 </script>
 
 </body>
 </html>
+
