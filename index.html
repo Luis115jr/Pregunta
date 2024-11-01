@@ -68,32 +68,19 @@
     const option2 = document.getElementById('option2'); // Opción fija
     const message = document.getElementById('message');
 
-    function moveOption(event) {
-        const buttonRect = option1.getBoundingClientRect(); // Obtener posición actual del botón
-        const containerRect = document.body.getBoundingClientRect(); // Limites de la ventana
-        const maxX = containerRect.width - buttonRect.width; // Límite máximo en X
-        const maxY = containerRect.height - buttonRect.height; // Límite máximo en Y
+    // Función para mover la opción "NO" al hacer clic
+    function moveOption() {
+        // Obtener posiciones actuales
+        const rect1 = option1.getBoundingClientRect();
+        const rect2 = option2.getBoundingClientRect();
 
-        // Aumentamos la sensibilidad del movimiento
-        let randomX = Math.random() * 200 - 100; // Movimiento más amplio en X
-        let randomY = Math.random() * 200 - 100; // Movimiento más amplio en Y
+        // Intercambiar las posiciones
+        option1.style.left = `${rect2.left}px`;
+        option1.style.top = `${rect2.top}px`;
 
-        // Nueva posición en X (ajustamos para que no se salga del borde)
-        let newX = buttonRect.left + randomX;
-        if (newX < 0) newX = 0;
-        if (newX > maxX) newX = maxX;
-
-        // Nueva posición en Y (ajustamos para que no se salga del borde)
-        let newY = buttonRect.top + randomY;
-        if (newY < 0) newY = 0;
-        if (newY > maxY) newY = maxY;
-
-        // Aplicamos la nueva posición
-        option1.style.transform = `translate(${newX - buttonRect.left}px, ${newY - buttonRect.top}px)`;
+        option2.style.left = `${rect1.left}px`;
+        option2.style.top = `${rect1.top}px`;
     }
-
-    // La opción "NO" se moverá cuando el mouse se acerque
-    option1.addEventListener('mouseenter', moveOption);
 
     // El usuario puede hacer clic en la opción "SI"
     option2.addEventListener('click', () => {
@@ -107,6 +94,7 @@
     // Bloquear clics en la opción "NO"
     option1.addEventListener('click', (e) => {
         e.preventDefault();
+        moveOption(); // Cambia de lugar la opción "NO"
         message.innerText = 'No puedes elegir NO, intenta con SI.';
         message.style.display = 'block';
         message.style.opacity = 1; // Hacer el mensaje visible
