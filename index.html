@@ -6,29 +6,51 @@
     <title>Pregunta con Opciones</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             background-color: #afa7c7;
             overflow: hidden; /* Evita que se desborde el contenido */
+            margin: 0; /* Elimina el margen del body */
         }
         .container {
             text-align: center;
+            position: relative;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            transition: color 0.3s;
         }
         .option {
             margin: 40px;
-            padding: 10px 20px;
+            padding: 15px 30px;
             background-color: #007BFF;
             color: white;
             border: none;
             cursor: pointer;
             position: absolute; /* Para poder mover el botón libremente */
-            transition: transform 0.05s ease; /* Transición rápida */
+            transition: transform 0.1s ease, background-color 0.3s; /* Transición suave */
+            border-radius: 5px; /* Bordes redondeados */
+            font-size: 18px; /* Tamaño de fuente */
         }
         .option:hover {
             transform: scale(1.1);
+            background-color: #0056b3; /* Cambio de color al pasar el mouse */
+        }
+        .message {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+            transition: opacity 0.5s;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
         }
     </style>
 </head>
@@ -38,11 +60,13 @@
     <h1>¿Te gustan las mujeres?</h1>
     <button class="option" id="option1" style="top: 50%; left: 50%;">NO</button>
     <button class="option" id="option2" style="top: 50%; left: 60%;">SI</button>
+    <div class="message" id="message"></div>
 </div>
 
 <script>
     const option1 = document.getElementById('option1'); // Opción que se moverá
     const option2 = document.getElementById('option2'); // Opción fija
+    const message = document.getElementById('message');
 
     function moveOption(event) {
         const buttonRect = option1.getBoundingClientRect(); // Obtener posición actual del botón
@@ -51,8 +75,8 @@
         const maxY = containerRect.height - buttonRect.height; // Límite máximo en Y
 
         // Aumentamos la sensibilidad del movimiento
-        let randomX = Math.random() * 400 - 200; // Movimiento más amplio en X
-        let randomY = Math.random() * 400 - 200; // Movimiento más amplio en Y
+        let randomX = Math.random() * 200 - 100; // Movimiento más amplio en X
+        let randomY = Math.random() * 200 - 100; // Movimiento más amplio en Y
 
         // Nueva posición en X (ajustamos para que no se salga del borde)
         let newX = buttonRect.left + randomX;
@@ -68,18 +92,24 @@
         option1.style.transform = `translate(${newX - buttonRect.left}px, ${newY - buttonRect.top}px)`;
     }
 
-    // La opción "Rojo" se moverá cuando el mouse se acerque
+    // La opción "NO" se moverá cuando el mouse se acerque
     option1.addEventListener('mouseenter', moveOption);
 
-    // El usuario puede hacer clic en la opción "Azul"
+    // El usuario puede hacer clic en la opción "SI"
     option2.addEventListener('click', () => {
-        alert('YA LO SABIA');
+        message.innerText = '¡Genial! Me alegra que pienses así.';
+        message.style.display = 'block';
+        message.style.opacity = 1; // Hacer el mensaje visible
+        option1.style.display = 'none'; // Esconder la opción "NO"
+        option2.style.backgroundColor = '#28a745'; // Cambiar color al hacer clic
     });
 
-    // Bloquear clics en la opción "Rojo"
+    // Bloquear clics en la opción "NO"
     option1.addEventListener('click', (e) => {
         e.preventDefault();
-        alert('No puedes elegir Rojo, intenta con Azul.');
+        message.innerText = 'No puedes elegir NO, intenta con SI.';
+        message.style.display = 'block';
+        message.style.opacity = 1; // Hacer el mensaje visible
     });
 </script>
 
