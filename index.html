@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pregunta con Opciones</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #afa7c7;
+            overflow: hidden; /* Evita que se desborde el contenido */
+        }
+        .container {
+            text-align: center;
+        }
+        .option {
+            margin: 40px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            position: absolute; /* Para poder mover el botón libremente */
+            transition: transform 0.05s ease; /* Transición rápida */
+        }
+        .option:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>¿Te gustan las mujeres?</h1>
+    <button class="option" id="option1" style="top: 50%; left: 50%;">NO</button>
+    <button class="option" id="option2" style="top: 50%; left: 60%;">SI</button>
+</div>
+
+<script>
+    const option1 = document.getElementById('option1'); // Opción que se moverá
+    const option2 = document.getElementById('option2'); // Opción fija
+
+    function moveOption(event) {
+        const buttonRect = option1.getBoundingClientRect(); // Obtener posición actual del botón
+        const containerRect = document.body.getBoundingClientRect(); // Limites de la ventana
+        const maxX = containerRect.width - buttonRect.width; // Límite máximo en X
+        const maxY = containerRect.height - buttonRect.height; // Límite máximo en Y
+
+        // Aumentamos la sensibilidad del movimiento
+        let randomX = Math.random() * 400 - 200; // Movimiento más amplio en X
+        let randomY = Math.random() * 400 - 200; // Movimiento más amplio en Y
+
+        // Nueva posición en X (ajustamos para que no se salga del borde)
+        let newX = buttonRect.left + randomX;
+        if (newX < 0) newX = 0;
+        if (newX > maxX) newX = maxX;
+
+        // Nueva posición en Y (ajustamos para que no se salga del borde)
+        let newY = buttonRect.top + randomY;
+        if (newY < 0) newY = 0;
+        if (newY > maxY) newY = maxY;
+
+        // Aplicamos la nueva posición
+        option1.style.transform = `translate(${newX - buttonRect.left}px, ${newY - buttonRect.top}px)`;
+    }
+
+    // La opción "Rojo" se moverá cuando el mouse se acerque
+    option1.addEventListener('mouseenter', moveOption);
+
+    // El usuario puede hacer clic en la opción "Azul"
+    option2.addEventListener('click', () => {
+        alert('YA LO SABIA');
+    });
+
+    // Bloquear clics en la opción "Rojo"
+    option1.addEventListener('click', (e) => {
+        e.preventDefault();
+        alert('No puedes elegir Rojo, intenta con Azul.');
+    });
+</script>
+
+</body>
+</html>
